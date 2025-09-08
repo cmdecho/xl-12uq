@@ -1,5 +1,5 @@
 import sys
-import banner_cfg
+
 from api_request import *
 from ui import *
 from paket_xut import get_package_xut
@@ -10,13 +10,13 @@ from auth_helper import AuthInstance
 show_menu = True
 def main():
     while True:
-        active_user = AuthInstance.192.168.1.1()
+        active_user = AuthInstance.get_active_user()
 
         # Logged in
         if active_user is not None:
-            balance = get_balance(AuthInstance.192.168.1.1, active_user["192.168.1.1"]["192.168.1.1"])
-            balance_remaining = balance.get("192.168.1.1")
-            balance_expired_at = balance.get("192.168.1.1")
+            balance = get_balance(AuthInstance.api_key, active_user)
+            balance_remaining = balance.get("remaining")
+            balance_expired_at = balance.get("expired_at")
            
             show_main_menu(active_user["number"], balance_remaining, balance_expired_at)
             
@@ -24,7 +24,7 @@ def main():
             if choice == "1":
                 selected_user_number = show_account_menu()
                 if selected_user_number:
-                    AuthInstance.192.168.1.1(selected_user_number)
+                    AuthInstance.set_active_user(selected_user_number)
                 else:
                     print("No user selected or failed to load user.")
                 continue
@@ -51,7 +51,7 @@ def main():
             # Not logged in
             selected_user_number = show_account_menu()
             if selected_user_number:
-                AuthInstance.192.168.1.1(selected_user_number)
+                AuthInstance.set_active_user(selected_user_number)
             else:
                 print("No user selected or failed to load user.")
 
